@@ -10,3 +10,30 @@
 // R0 >= 0, R1 >= 0, and R0*R1 < 32768.
 
 // Put your code here.
+
+    @R2
+    M = 0
+
+    @R0
+    D = M
+    @END
+    D;JEQ
+
+(LOOP)
+    @R2
+    D = M
+    @R1
+    D = D + M
+    @R2
+    M = D
+
+    @R0
+    D = M
+    D = D - 1
+    M = D
+
+    @LOOP
+    D;JGT
+(END)
+	@END
+	0;JMP
