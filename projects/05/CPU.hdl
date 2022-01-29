@@ -33,11 +33,45 @@ CHIP CPU {
                          // program (reset==1) or continue executing
                          // the current program (reset==0).
 
-    OUT outM[16],        // M value output
-        writeM,          // Write to M? 
-        addressM[15],    // Address in data memory (of M)
+    OUT outM[16],        // M value output (done)
+        writeM,          // Write to M?
+        addressM[15],    // Address in data memory (of M) (done)
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    Not(in=instruction[15], out=Ainstruction);
+    Not(in=Ainstruction, out=Cinstruction);
+
+    // A Register
+    And(a=Cinstruction, b=instruction[5], out=AregSel1);
+    Mux16(b=aluO, a=instruction, sel=AregSel1, out=ARegIn);
+    Or(a=Ainstruction, b=AregSel1, out=ARegSel);
+    ARegister(in=ARegIn, load=ARegSel, out=ARegO, out[0..14]=addressM);
+
+    // D Register
+    And(a=Cinstruction, b=instruction[4], out=DRegSel);
+    DRegister(in=aluO, load=DRegSel, out=DRegO);
+
+    // ALU Y input
+    Mux16(a=ARegO, b=inM, sel=instruction[12], out=AORM);
+
+    // ALU
+    ALU(x=DRegO, y=AORM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=aluO, out=outM, zr=zr, ng=ng);
+
+    // writeM
+    And(a=Cinstruction, b=instruction[3], out=writeM);
+
+    // PC
+    And(a=zr, b=instruction[1], out=jeq);
+    And(a=ng, b=instruction[2], out=jlt);
+    Or(a=zr, b=ng, out=zeroOrNeg);
+    Not(in=zeroOrNeg, out=positive);
+    And(a=positive, b=instruction[0], out=jgt);
+    Or(a=jeq, b=jlt, out=jle);
+    Or(a=jle, b=jgt, out=jumpToA);
+
+    And(a=Cinstruction, b=jumpToA, out=load);
+    Not(in=load, out=inc);
+
+    PC(in=ARegO, load=load, inc=inc, reset=reset, out[0..14]=pc);
 }
