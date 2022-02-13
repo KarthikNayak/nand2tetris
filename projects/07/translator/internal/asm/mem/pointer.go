@@ -51,7 +51,7 @@ func (p *Pointer) pushPointer() []string {
 
 	return []string{
 		"@" + v,
-		"D = A",
+		"D = M",
 
 		"@SP",
 		"AM = M + 1",
