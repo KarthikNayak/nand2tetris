@@ -15,7 +15,7 @@ var (
 	SUB  CMD = "SUB"
 	NEG  CMD = "NEG"
 	EQ   CMD = "EQ"
-	GET  CMD = "GET"
+	GT   CMD = "GT"
 	LT   CMD = "LT"
 	AND  CMD = "AND"
 	OR   CMD = "OR"
@@ -77,8 +77,8 @@ func parseCMD(cmd string) (CMD, error) {
 		return NEG, nil
 	case "eq":
 		return EQ, nil
-	case "get":
-		return GET, nil
+	case "gt":
+		return GT, nil
 	case "lt":
 		return LT, nil
 	case "and":

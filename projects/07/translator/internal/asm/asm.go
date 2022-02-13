@@ -16,6 +16,7 @@ type Data struct {
 	Stack    lexer.Stack
 	Filename string
 	Val      int
+	Index    int
 }
 
 func Factory(d Data) (ASMer, error) {
@@ -47,6 +48,20 @@ func Factory(d Data) (ASMer, error) {
 		return math.NewAdd(), nil
 	case lexer.SUB:
 		return math.NewSubtract(), nil
+	case lexer.NEG:
+		return math.NewNegate(), nil
+	case lexer.AND:
+		return math.NewAnd(), nil
+	case lexer.OR:
+		return math.NewOr(), nil
+	case lexer.NOT:
+		return math.NewNot(), nil
+	case lexer.EQ:
+		return math.NewEq(d.Index), nil
+	case lexer.GT:
+		return math.NewGt(d.Index), nil
+	case lexer.LT:
+		return math.NewLt(d.Index), nil
 	}
 	return nil, fmt.Errorf("non supported cmd: %s", d.CMD)
 }
