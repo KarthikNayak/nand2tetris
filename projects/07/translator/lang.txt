@@ -1,2 +1,2 @@
-go
+python3
 debug
