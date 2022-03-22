@@ -20,7 +20,8 @@ func main() {
 		handleError("error opening VM file:", err)
 	}
 
-	filename := strings.Split(programName, ".")[0]
+	splits := strings.Split(programName, "/")
+	filename := strings.Split(splits[len(splits)-1], ".")[0]
 	m, err := internal.Convert(f, filename)
 	if err != nil {
 		handleError("error while converting VM code", err)
